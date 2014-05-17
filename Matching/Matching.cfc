@@ -37,6 +37,12 @@ function Question(arg) {
 		WHERE UsrID = @UsrID
 	) Guess
 	ON Guess_QuestionID = QuestionID
+	LEFT JOIN (
+		SELECT Wrk_GuessID
+		FROM Wrk
+		GROUP BY Wrk_GuessID
+	) Wrk
+	ON Wrk_GuessID = GuessID
 	WHERE ActID=@ActID
 	AND Correct=1
 	ORDER BY GuessID

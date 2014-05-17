@@ -32,7 +32,7 @@ remote function Save() {
 	DECLARE @LogJSSort Int = #Val(arguments.LogJSSort)#
 	DECLARE @LogUIElapsed Int = #GetTickCount() - local.TickCount#
 	UPDATE LogUI SET
-	 LogUI_LogCFID = @LogCFID
+	 LogUI_CFID = @LogCFID
 	,LogUISort=@LogJSSort
 	,LogUIElapsed=@LogUIElapsed
 	,LogUIDateTime = getdate()

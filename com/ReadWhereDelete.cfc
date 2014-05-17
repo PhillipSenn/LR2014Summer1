@@ -29,19 +29,25 @@ function Where(arg,FieldValue,OrderBy) {
 	include '/Inc/newQuery.cfm';
 	if (StructKeyExists(arguments,"arg")) {
 		if (IsSimpleValue(arg)) { // Example a
-			local.sql = 'SELECT * FROM ' & Variables.fw.TableName & 'View WHERE ' & arguments.arg & ' = ' & Val(arguments.FieldValue);
+			local.sql = 'SELECT *
+FROM ' & Variables.fw.TableName & 'View WHERE ' & arguments.arg & ' = ' & Val(arguments.FieldValue);
 		} else { // 1 parameter: arg.FieldName, arg.FieldValue and arg.OrderBy (Example b)
-			local.sql = 'SELECT * FROM ' & Variables.fw.TableName & 'View WHERE ' & arg.FieldName & ' = ' & Val(arg.FieldValue);
+			local.sql = 'SELECT *
+FROM ' & Variables.fw.TableName & 'View WHERE ' & arg.FieldName & ' = ' & Val(arg.FieldValue);
 		}
 	} else { // 0 parameters
-		local.sql = 'SELECT * FROM ' & Variables.fw.TableName & 'View';
+		local.sql = 'SELECT *
+FROM ' & Variables.fw.TableName & 'View';
 	}
 	if (StructKeyExists(arguments,'OrderBy')) { // 3 parameters (Example a)
-		local.sql &= ' ORDER BY ' & arguments.OrderBy;
+		local.sql &= '
+ORDER BY ' & arguments.OrderBy;
 	} else if (IsDefined("arguments.arg.OrderBy")) { // 1 parameter: arg.FieldName, arg.FieldValue and arg.OrderBy (Example b)
-		local.sql &= ' ORDER BY ' & arguments.arg.OrderBy;
+		local.sql &= '
+ORDER BY ' & arguments.arg.OrderBy;
 	} else { // 0 parameters or 2 parameters (Example a)
-		local.sql &= ' ORDER BY ' & Variables.fw.TableSort;
+		local.sql &= '
+ORDER BY ' & Variables.fw.TableSort;
 	}
 	include '/Inc/execute.cfm';
 	return local.result;

@@ -4,15 +4,15 @@ Variables.fw.TableName = 'LogCF'
 Variables.fw.TableSort = 'LogCFDateTime DESC'
 
 function Save() {
-	request.rfw.log.Sort += 1 // I use the same counter for LogDB, LogDBErr, LogCF, LogCFErr
+	request.fw.log.Sort += 1 // I use the same counter for LogDB, LogDBErr, LogCF, LogCFErr
 	local.LogCFOutString   = getPageContext().getOut().getString()
 	local.LogCFQueryString = cgi.QUERY_STRING // getPageContext().getRequest().getQueryString()
 	local.RemoteAddr  = getPageContext().getRequest().getRemoteAddr()
 	local.LogCFName  = getPageContext().getRequest().getServletPath()
 	if (FindNoCase('.cfc',local.LogCFName)) {
-		return session.sfw.LogCFID // ajax calls to cfc's go through onRequestStart, which would produce a new LogCFID.  Use the one in the session scope instead.
+		return 'x' & session.fw.LogCFID // ajax calls to cfc's go through onRequestStart, which would produce a new LogCFID.  Use the one in the session scope instead.
 	}
-	// local.LogCFName  = ReplaceNoCase(local.LogCFName,Application.afw.Path,'')
+	// local.LogCFName  = ReplaceNoCase(local.LogCFName,Application.fw.Path,'')
 	// local.LogCFCookies     = getPageContext().getRequest().getHeader('Cookie')
 	local.LogCFUserAgent   = getPageContext().getRequest().getHeader('User-Agent')
 	savecontent variable='local.LogCFURL' { 
@@ -41,14 +41,14 @@ function Save() {
 	local.svc.setSQL('SELECT LogCFID = NEXT VALUE FOR LogCFID') // I'm having a hard time executing an update followed by a select in Railo.
 	local.svc.setDataSource(Variables.fw.DataSource)
 	local.obj = local.svc.execute()
-	session.sfw.LogCFID = local.obj.getResult().LogCFID
+	session.fw.LogCFID = local.obj.getResult().LogCFID
 
 	include '/Inc/newQuery.cfm'
 	local.sql = '
-	DECLARE @LogCFID BigInt = #Val(session.sfw.LogCFID)#
-	DECLARE @DomainID Int = #Val(Application.afw.DomainID)#
-	DECLARE @LogCFSort Int = #Val(request.rfw.log.Sort)#
-	DECLARE @LogCFElapsed Int = #GetTickCount() - request.rfw.TickCount#
+	DECLARE @LogCFID BigInt = #Val(session.fw.LogCFID)#
+	DECLARE @DomainID Int = #Val(Application.fw.DomainID)#
+	DECLARE @LogCFSort Int = #Val(request.fw.log.Sort)#
+	DECLARE @LogCFElapsed Int = #GetTickCount() - request.fw.TickCount#
 	DECLARE @UsrID Int = #Val(local.UsrID)#
 	
 	UPDATE LogCF SET
@@ -75,8 +75,8 @@ function Save() {
 	local.svc.addParam(cfsqltype='cf_sql_varchar',value=local.LogCFForm)
 	local.svc.addParam(cfsqltype='cf_sql_varchar',value=local.LogCFSession)
 	local.svc.addParam(cfsqltype='cf_sql_varchar',value=Left(local.RemoteAddr,15))
-	local.lfw.log.db = false
+	local.fw.log.db = false
 	include '/Inc/Execute.cfm'
-	return session.sfw.LogCFID // For: LogCFErr_CFID
+	return session.fw.LogCFID // For: LogCFErr_CFID
 }
 }

@@ -4,9 +4,9 @@ Variables.fw.TableSort = 'LogDBDateTime DESC, LogDBID DESC'
 Variables.fw.DataSource = 'fw'
 
 function Save(arg) {
-	request.rfw.log.Sort += 1 // This would show how many times this request has made a database call.
-	session.sfw.log.Sort += 1 // This would show how many times this session has made a database call.
-	if (session.sfw.log.MaxDB AND session.sfw.log.Sort > session.sfw.log.MaxDB) return;
+	request.fw.log.Sort += 1 // This would show how many times this request has made a database call.
+	session.fw.log.Sort += 1 // This would show how many times this session has made a database call.
+	if (session.fw.log.MaxDB AND session.fw.log.Sort > session.fw.log.MaxDB) return;
 
 	local.LogDBName = Trim(arg.result.Prefix.sql) // The sql string that was executed
 	local.LogDBName = Replace(local.LogDBName,Chr(9),'','all')
@@ -28,16 +28,16 @@ function Save(arg) {
 	local.obj = local.svc.execute()
 	local.LogDBID = local.obj.getResult().LogDBID
 
-	if (IsDefined("request.rfw.LogCFID")) {
-		local.LogCFID = request.rfw.LogCFID
+	if (IsDefined("request.fw.LogCFID")) {
+		local.LogCFID = request.fw.LogCFID
 	} else {
 		local.LogCFID = 0
 	}
 	local.sql = "
 	DECLARE @LogDBID BigInt = #Val(local.LogDBID)#
-	DECLARE @DomainID Int = #Val(Application.afw.DomainID)#
-	DECLARE @LogDBSort Int = #Val(request.rfw.log.Sort)#
-	DECLARE @LogDBElapsed Int = #GetTickCount() - request.rfw.TickCount#
+	DECLARE @DomainID Int = #Val(Application.fw.DomainID)#
+	DECLARE @LogDBSort Int = #Val(request.fw.log.Sort)#
+	DECLARE @LogDBElapsed Int = #GetTickCount() - request.fw.TickCount#
 	DECLARE @LogDBRecordCount Int = #Val(arg.result.Prefix.RecordCount)#
 	DECLARE @LogDBExecutionTime Int = #Val(arg.result.Prefix.ExecutionTime)#
 	DECLARE @LogCFID BigInt = #Val(local.LogCFID)#
@@ -57,8 +57,8 @@ function Save(arg) {
 	"
 	local.svc = new query()
 	local.svc.setSQL(local.sql)
-	local.svc.addParam(cfsqltype="cf_sql_varchar",value=arg.lfw.MetaData.FullName)
-	local.svc.addParam(cfsqltype="cf_sql_varchar",value=arg.lfw.FunctionCalledName)
+	local.svc.addParam(cfsqltype="cf_sql_varchar",value=arg.fw.MetaData.FullName)
+	local.svc.addParam(cfsqltype="cf_sql_varchar",value=arg.fw.FunctionCalledName)
 	local.svc.addParam(cfsqltype="cf_sql_varchar",value=local.LogDBName)
 	local.svc.setDataSource('fw')
 	local.obj = local.svc.execute()

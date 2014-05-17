@@ -1,22 +1,22 @@
 <cfscript>
 local.arr = local.svc.getParams()
-if (IsDefined('local.lfw.DataSource')) {
-	local.svc.setDataSource(local.lfw.DataSource)
+if (IsDefined('local.fw.DataSource')) {
+	local.svc.setDataSource(local.fw.DataSource)
 }
 local.svc.setSQL(local.sql)
-if (local.lfw.try.catch) {
+if (local.fw.try.catch) {
 	try {
 		local.obj = local.svc.execute()
 		local.result.qry = local.obj.getResult()
 		local.result.Prefix = local.obj.getPrefix()
 	} catch(any Exception) {
-		request.rfw.msg = 'An Exception.Error has occured'
-		request.rfw.modifier = local.lfw.try.class
-		request.rfw.Detail = Exception.Detail
-		if (local.lfw.try.email != '') {
+		request.fw.msg = 'An Exception.Error has occured'
+		request.fw.modifier = local.fw.try.class
+		request.fw.Detail = Exception.Detail
+		if (local.fw.try.email != '') {
 			local.svc = new mail()
-			local.svc.setSubject(Application.afw.Name & ': ' & ListLast(GetBaseTemplatePath(),'\'))
-			local.svc.setBody('Database Error: #request.rfw.msg#<p>#request.rfw.Detail#</p>')
+			local.svc.setSubject(Application.fw.Name & ': ' & ListLast(GetBaseTemplatePath(),'\'))
+			local.svc.setBody('Database Error: #request.fw.msg#<p>#request.fw.Detail#</p>')
 			
 			local.port=465
 			local.server='smtp.gmail.com'
@@ -38,18 +38,18 @@ if (local.lfw.try.catch) {
 			local.svc.setPassword(Password)
 
 
-			local.svc.setTo(local.lfw.try.email)
+			local.svc.setTo(local.fw.try.email)
 			// local.svc.Send()
 		}
-		if (local.lfw.log.dbErr) { // If we are logging database errors
-			session.sfw.log.DBErrCounter += 1 // See onRequestStart
+		if (local.fw.log.dbErr) { // If we are logging database errors
+			session.fw.log.DBErrCounter += 1 // See onRequestStart
 			local.result.Exception = Exception
-			if (IsDefined('request.rfw.LogCFID')) {
-				local.LogCFID = request.rfw.LogCFID
+			if (IsDefined('request.fw.LogCFID')) {
+				local.LogCFID = request.fw.LogCFID
 			} else {
 				local.LogCFID = 0 // Trying to track down a bug. new com.LogCF().Save()
 			}
-			local.lfw.MetaData = GetMetaData()
+			local.fw.MetaData = GetMetaData()
 			new com.LogDBErr().Save(local)
 		}
 	} finally {
@@ -59,9 +59,9 @@ if (local.lfw.try.catch) {
 	local.result.qry = local.obj.getResult()
 	local.result.Prefix = local.obj.getPrefix()
 }
-if (local.lfw.log.db) { // If we are logging this database call. This gives me the chance to turn it off at the local scope.
+if (local.fw.log.db) { // If we are logging this database call. This gives me the chance to turn it off at the local scope.
 	if (IsDefined('local.result.Prefix')) {
-		local.lfw.MetaData = GetMetaData()
+		local.fw.MetaData = GetMetaData()
 		new com.LogDB().Save(local)
 	}
 }

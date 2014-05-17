@@ -1,14 +1,12 @@
 <cfscript>
-LogCF = new com.LogCF().Read(url);
-StructDelete(request,"Bootstrap");
+Usr = new com.Usr().Read(url)
 </cfscript>
 
-<cfoutput query="LogCF.qry">
+<cfoutput query="Usr.qry">
 <cfinclude template="/Inc/html.cfm">
 <cfinclude template="/Inc/body.cfm">
-<pre>
-#Replace(LogCFOutString,'<','&lt;','all')#
-</pre>
+#PersonName#
+<p>And other info when I get around to it</p>
 <cfinclude template="/Inc/foot.cfm">
 <cfinclude template="/Inc/End.cfm">
 </cfoutput>

@@ -1,5 +1,5 @@
 <cfscript>
-request.rfw.msg = 'You have been logged out.'
+request.fw.msg = 'You have been logged out.'
 </cfscript>
 
 <cfoutput>

@@ -10,7 +10,7 @@ function Where(arg) {
 	WHERE LogDBSort=0
 	ORDER BY LogDBDateTime DESC
 	";
-	local.lfw.LogDB = false;
+	local.fw.LogDB = false;
 	include "/Inc/execute.cfm";
 	Then use that to limit the number of rows WHERE LogCFDateTime > LogDBDateTime
 	*/
@@ -20,7 +20,7 @@ function Where(arg) {
 	;WITH CF AS(
 		SELECT TOP 100 *
 		FROM LogCF
-		WHERE LogCF_DomainID = @DomainID
+		WHERE LogCF_DomainID IN(0,@DomainID)
 		ORDER BY LogCFDateTime DESC
 	)
 	,CFC AS(
@@ -30,7 +30,7 @@ function Where(arg) {
 		FROM LogCFC
 		JOIN LogCFView
 		ON LogCFC_CFID = LogCFID
-		WHERE LogCFC_DomainID = @DomainID
+		WHERE LogCFC_DomainID IN(0,@DomainID)
 		ORDER BY LogCFCDateTime DESC
 	)
 	,CFErr AS(
@@ -40,7 +40,7 @@ function Where(arg) {
 		FROM LogCFErr
 		JOIN LogCFView
 		ON LogCFErr_CFID = LogCFID
-		WHERE LogCFErr_DomainID = @DomainID
+		WHERE LogCFErr_DomainID IN(0,@DomainID)
 		ORDER BY LogCFErrDateTime DESC
 	)
 	,DB AS(
@@ -50,7 +50,7 @@ function Where(arg) {
 		FROM LogDB
 		JOIN LogCFView
 		ON LogDB_CFID = LogCFID
-		WHERE LogDB_DomainID = @DomainID
+		WHERE LogDB_DomainID IN(0,@DomainID)
 		ORDER BY LogDBDateTime DESC
 	)
 	,DBErr AS(
@@ -63,7 +63,7 @@ function Where(arg) {
 		FROM LogDBErr
 		JOIN LogDBView
 		ON LogDBErr_DBID = LogDBID
-		WHERE LogDBErr_DomainID = @DomainID
+		WHERE LogDBErr_DomainID IN(0,@DomainID)
 		ORDER BY LogDBErrDateTime DESC
 	)
 	,JS AS(
@@ -73,7 +73,7 @@ function Where(arg) {
 		FROM LogJS
 		JOIN LogCFView
 		ON LogJS_CFID = LogCFID
-		WHERE LogJS_DomainID = @DomainID
+		WHERE LogJS_DomainID IN(0,@DomainID)
 		ORDER BY LogJSDateTime DESC
 	)
 	,UI AS(
@@ -83,7 +83,7 @@ function Where(arg) {
 		FROM LogUI
 		JOIN LogCFView
 		ON LogUI_CFID = LogCFID
-		WHERE LogUI_DomainID = @DomainID
+		WHERE LogUI_DomainID IN(0,@DomainID)
 		ORDER BY LogUIDateTime DESC
 	)
 	SELECT 'DB' AS Type
@@ -247,9 +247,9 @@ function Where(arg) {
 	,0 AS Int1
 	,0 AS Int2
 	FROM JS
-	ORDER BY LogDateTime DESC
+	ORDER BY LogDateTime DESC,Type,PrimaryKey DESC
 	";
-	local.lfw.log.db = false;
+	local.fw.log.db = false;
 	include "/Inc/execute.cfm";
 	return local.result;
 }

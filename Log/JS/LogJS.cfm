@@ -40,7 +40,7 @@ Variables.fw.container = false
 					</cfif>
 				</td>
 				<td>#LogJSPathName#</td>
-				<td><a href="LogJSDesc.cfm?LogJSID=#LogJSID#">#LogJSName#</a></td>
+				<td><a href="Desc.cfm?LogJSID=#LogJSID#">#LogJSName#</a></td>
 				<td class="date" data-date="#DateFormat(LogJSDateTime,'yyyymmdd')##TimeFormat(LogJSDateTime,'HHmmss.l')#">
 					<cfif SaveDate NEQ DateFormat(LogJSDateTime,"mm/dd")>
 						<cfset SaveDate = DateFormat(LogJSDateTime,"mm/dd")>

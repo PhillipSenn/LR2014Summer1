@@ -1,44 +1,45 @@
 component {
-this.Name = "Summer0516"
+this.Name = "Summer20140517"
 this.DataSource = "LR2014Summer1"
 this.SessionManagement = true
 this.ScriptProtect = "all"
 
 function onApplicationStart() {
-	Application.afw = {}
-	Application.afw.name='Lenoir-Rhyne University'
-	Application.afw.Path = '/'
-	Application.afw.msg = ''
-	Application.afw.modifier = 'label-info'
+	Application.fw = {}
+	Application.fw.name='Lenoir-Rhyne University'
+	Application.fw.Path = '/'
+	Application.fw.msg = ''
+	Application.fw.modifier = 'label-info'
+	Application.fw.RemoteAddr = '216.198.198.150' // The server.
 
-	Application.afw.log = {}
-	Application.afw.log.CF  = true
-	Application.afw.log.CFC = true
-	Application.afw.log.CFErr = true
-	Application.afw.log.DB = true 		// INSERT INTO LogDB
-	Application.afw.log.DBErr = true 	// INSERT INTO LogDBErr
-	Application.afw.log.JS  = true
-	Application.afw.log.UI  = true
-	Application.afw.log.CFErrCounter = 0
-	Application.afw.log.DBErrCounter = 0
-	Application.afw.log.MaxDB = 0		// Every session defaults to logging a maximum of n sequences
+	Application.fw.log = {}
+	Application.fw.log.CF  = true
+	Application.fw.log.CFC = true
+	Application.fw.log.CFErr = true
+	Application.fw.log.DB = true 		// INSERT INTO LogDB
+	Application.fw.log.DBErr = true 	// INSERT INTO LogDBErr
+	Application.fw.log.JS  = true
+	Application.fw.log.UI  = true
+	Application.fw.log.CFErrCounter = 0
+	Application.fw.log.DBErrCounter = 0
+	Application.fw.log.MaxDB = 0		// Every session defaults to logging a maximum of n sequences
 
-	Application.afw.try = {}
-	Application.afw.try.catch = true
-	Application.afw.try.abort = true // abort if there is a database exception
-	Application.afw.try.class = 'label-danger'
-	Application.afw.try.email = 'lrPhillipSenn@gmail.com'
-	Application.afw.js = true // This get duplicated in the session scope
-	Application.afw.css= true // This get duplicated in the session scope
-	Application.afw.hidden = false // Hide #main until the page has loaded.
+	Application.fw.try = {}
+	Application.fw.try.catch = true
+	Application.fw.try.abort = true // abort if there is a database exception
+	Application.fw.try.class = 'label-danger'
+	Application.fw.try.email = 'lrPhillipSenn@gmail.com'
+	Application.fw.js = true // This get duplicated in the session scope
+	Application.fw.css= true // This get duplicated in the session scope
+	Application.fw.hidden = false // Hide #main until the page has loaded.
 
-	Application.afw.DomainID = 0 // For logging the next command
-	Application.afw.log.Sort = 0 // For logging the next command
-	Application.afw.tickCount = GetTickCount() // For logging the next command
-	Application.afw.LogCFID = 0 // For logging the next command
-	session.sfw = Duplicate(Application.afw) // fw.try, fw.log
-	request.rfw = Duplicate(Application.afw) // fw.try, fw.log
-	Application.afw.DomainID = new com.Domain().WhereDomainName()
+	Application.fw.DomainID = 0 // For logging the next command
+	Application.fw.log.Sort = 0 // For logging the next command
+	Application.fw.tickCount = GetTickCount() // For logging the next command
+	Application.fw.LogCFID = 0 // For logging the next command
+	session.fw = Duplicate(Application.fw) // fw.try, fw.log
+	request.fw = Duplicate(Application.fw) // fw.try, fw.log
+	Application.fw.DomainID = new com.Domain().WhereDomainName()
 	local.LogCFCName = 'this.Name: ' & this.Name;
 	local.LogCFCDesc = 'onApplicationStart';
 	new com.LogCFC().Save(local);
@@ -46,10 +47,11 @@ function onApplicationStart() {
 }
 
 function onSessionStart() {
-	session.sfw = Duplicate(Application.afw)
-	request.rfw = Duplicate(Application.afw)
-	local.LogCFCName = 'this.Name: ' & this.Name;
-	local.LogCFCDesc = 'onSessionStart';
+	session.fw = Duplicate(Application.fw)
+	session.fw.RemoteAddr = getPageContext().getRequest().getRemoteAddr() // The user
+	request.fw = Duplicate(Application.fw)
+	local.LogCFCName = 'this.Name: ' & this.Name
+	local.LogCFCDesc = 'onSessionStart'
 	new com.LogCFC().Save(local);
 }
 
@@ -61,8 +63,8 @@ function onRequestStart(LogCFCName) {
 	if (StructKeyExists(form,"onSessionStart")) {
 		onSessionStart()
 	}
-	request.rfw = Duplicate(session.sfw)
-	request.rfw.tickCount = GetTickCount()
+	request.fw = Duplicate(session.fw)
+	request.fw.tickCount = GetTickCount()
 	local.LogCFCName = arguments.LogCFCName;
 	local.LogCFCDesc = 'onRequestStart';
 	new com.LogCFC().Save(local)
@@ -78,9 +80,9 @@ function onRequestStart(LogCFCName) {
 			}
 		}
 	}
-	request.rfw.LogCFID = new com.LogCF().Save() // This is for LogDB
-	session.sfw.LogCFID = request.rfw.LogCFID // These are for LogUI and LogJS.
-	session.sfw.TickCount = GetTickCount() // I put it these the session scope so that they can't be gamed.
+	request.fw.LogCFID = new com.LogCF().Save() // This is for LogDB
+	session.fw.LogCFID = request.fw.LogCFID // These are for LogUI and LogJS.
+	session.fw.TickCount = GetTickCount() // I put it these the session scope so that they can't be gamed.
 	setting showDebugoutput = false;
 	if (IsDefined('form.UniqueID')) {
 		local.Usr = new com.Usr().WhereUniqueID(form)
@@ -91,14 +93,14 @@ function onRequestStart(LogCFCName) {
 	if (IsDefined('session.Usr.qry')) {
 		//
 	} else {
-//		include '/Inc/LoggedOut.cfm'
+		include '/Inc/LoggedOut.cfm'
 		return false
 	}
 	return true
 }
 
 function OnRequestEnd(LogCFCName) {
-	session.sfw.msg = ''
+	session.fw.msg = ''
 	local.LogCFCName = arguments.LogCFCName;
 	local.LogCFCDesc = 'onRequestEnd';
 	new com.LogCFC().Save(local);
@@ -135,61 +137,61 @@ function onApplicationEnd(myApplication) {
 }
 
 function onError(Exception,EventName) {
-	if (!IsDefined('session.sfw.log.CFErr')) return;
-	if (!session.sfw.log.CFErr) return;
-	session.sfw.log.CFErrCounter += 1 // See onRequestStart
+	if (!IsDefined('session.fw.log.CFErr')) return;
+	if (!session.fw.log.CFErr) return;
+	session.fw.log.CFErrCounter += 1 // See onRequestStart
 
 	if (IsDefined('arguments.Exception.Message')) {
-		request.rfw.msg = Exception.Message
-		request.rfw.modifier = 'label-danger'
+		request.fw.msg = Exception.Message
+		request.fw.modifier = 'label-danger'
 		local.LogCFErrMessage = Exception.Message
 	} else {
 		local.LogCFErrMessage = 'No Exception.Message'
 	}
 
-	request.rfw.Detail = ''
+	request.fw.Detail = ''
 	if (isDefined('arguments.Exception.Number')) {
-		request.rfw.Detail &= 'Exception.Number: #arguments.Exception.Number#<br>'
+		request.fw.Detail &= 'Exception.Number: #arguments.Exception.Number#<br>'
 		local.LogCFErrNumber = Exception.Number
 	} else {
 		local.LogCFErrNumber = 'No Exception.Number'
 	}
 	if (isDefined('arguments.Exception.TagContext') && IsArray(Exception.TagContext) && ArrayLen(Exception.TagContext)) {
-		request.rfw.Detail &= 'Exception.TagContext[1].Line: #arguments.Exception.TagContext[1].Line#<br>'
+		request.fw.Detail &= 'Exception.TagContext[1].Line: #arguments.Exception.TagContext[1].Line#<br>'
 		local.LogCFErrLine = Exception.TagContext[1].Line
 	} else {
 		local.LogCFErrLine = 0
 	}
 
 	if (isDefined('arguments.Exception.Name')) {
-		request.rfw.Detail &= 'Exception.Name: #arguments.Exception.Name#<br>'
+		request.fw.Detail &= 'Exception.Name: #arguments.Exception.Name#<br>'
 		local.LogCFErrName = Exception.Name
 	} else {
 		local.LogCFErrName = 'No Exception.Name'
 	}
 	if (isDefined('arguments.Exception.Detail') AND arguments.Exception.Detail != '') {
-		request.rfw.Detail &= 'Exception.Detail: #arguments.Exception.Detail#<br>'
+		request.fw.Detail &= 'Exception.Detail: #arguments.Exception.Detail#<br>'
 		local.LogCFErrDetail = Exception.Detail
 	} else {
 		local.LogCFErrDetail = 'No Exception.Detail'
 	}
 	if (isDefined('arguments.Exception.Type')) {
-		request.rfw.Detail &= 'Exception.Type: #arguments.Exception.Type#<br>'
+		request.fw.Detail &= 'Exception.Type: #arguments.Exception.Type#<br>'
 		local.LogCFErrType = Exception.Type
 	} else {
 		local.LogCFErrType = 'No Exception.Type'
 	}
 	if (IsDefined('arguments.EventName') AND arguments.EventName != '') {
-		request.rfw.Detail &= 'EventName: #arguments.EventName#<br>'
+		request.fw.Detail &= 'EventName: #arguments.EventName#<br>'
 		local.LogCFErrEventName = arguments.EventName
 	} else {
 		local.LogCFErrEventName = 'No arguments.EventName'
 	}
-	request.rfw.Detail &= '</pre>'
+	request.fw.Detail &= '</pre>'
 
 	local.svc = new mail()
-	local.svc.setSubject(Application.afw.Name & ': ' & ListLast(GetBaseTemplatePath(),'\'))
-	local.svc.setBody('Exception.Message: #request.rfw.msg#<p>#request.rfw.Detail#</p>')
+	local.svc.setSubject(Application.fw.Name & ': ' & ListLast(GetBaseTemplatePath(),'\'))
+	local.svc.setBody('Exception.Message: #request.fw.msg#<p>#request.fw.Detail#</p>')
 	
 	local.port=465
 	local.server='smtp.gmail.com'
@@ -209,18 +211,18 @@ function onError(Exception,EventName) {
 	local.svc.setTo('Professor Senn<lrPhillipSenn@gmail.com>')
 //	local.svc.Send()
 
-	request.rfw.log.Sort += 1; // I use the same counter for LogDB, LogDBErr, LogCF, LogCFErr, LogCFC
+	request.fw.log.Sort += 1; // I use the same counter for LogDB, LogDBErr, LogCF, LogCFErr, LogCFC
 	local.LogCFID = new com.LogCF().Save()
 	local.sql = '
-	DECLARE @DomainID Int = #Val(Application.afw.DomainID)#
+	DECLARE @DomainID Int = #Val(Application.fw.DomainID)#
 	DECLARE @LogCFErrID BigInt = NEXT VALUE FOR LogCFErrID;
 	DECLARE @LogCFID BigInt = #Val(local.LogCFID)#;
-	DECLARE @LogCFErrSort Int = #Val(request.rfw.log.Sort)#;
-	DECLARE @LogCFErrElapsed Int = #GetTickCount() - request.rfw.TickCount#;
+	DECLARE @LogCFErrSort Int = #Val(request.fw.log.Sort)#;
+	DECLARE @LogCFErrElapsed Int = #GetTickCount() - request.fw.TickCount#;
 	DECLARE @LogCFErrNumber Int = #Val(local.LogCFErrNumber)#;
 	DECLARE @LogCFErrLine Int = #Val(local.LogCFErrLine)#;
 	
-	UPDATE fw.dbo.LogCFErr SET
+	UPDATE LogCFErr SET
 	 LogCFErr_DomainID	= @DomainID
 	,LogCFErr_CFID		= @LogCFID
 	,LogCFErrSort			= @LogCFErrSort
@@ -246,8 +248,8 @@ function onError(Exception,EventName) {
 	local.svc.setDataSource('fw')
 	local.svc.execute()
 
-	request.rfw.Detail = '<pre>#request.rfw.Detail#</pre>'
-	request.rfw.Detail &= "I've sent an email to the administrator."
+	request.fw.Detail = '<pre>#request.fw.Detail#</pre>'
+	request.fw.Detail &= "I've sent an email to professor Senn."
 	include "/Inc/onError.cfm"
 }
 

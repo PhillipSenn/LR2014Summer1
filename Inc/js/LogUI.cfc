@@ -4,8 +4,8 @@ Variables.fw.DataSource = 'fw'
 remote function Save() {
 	include '/Inc/newQuery.cfm'
 	local.LogUIName = ReplaceNoCase(cgi.HTTP_REFERER,'http://summer.lenoir-rhyne.com','')
-	if (FindNoCase(Application.afw.Path,local.LogUIName) == 1) {
-		local.LogUIName = Mid(local.LogUIName,Len(Application.afw.Path),128)
+	if (FindNoCase(Application.fw.Path,local.LogUIName) == 1) {
+		local.LogUIName = Mid(local.LogUIName,Len(Application.fw.Path),128)
 	}
 	local.LogUIName = Replace(local.LogUIName,'=','= ','all')
 	
@@ -14,13 +14,13 @@ remote function Save() {
 	} else {
 		local.LogUIClass = ''
 	}
-	if (IsDefined('session.sfw.TickCount')) {
-		local.TickCount = session.sfw.TickCount
+	if (IsDefined('session.fw.TickCount')) {
+		local.TickCount = session.fw.TickCount
 	} else {
 		local.TickCount = GetTickCount()
 	}
-	if (isDefined('session.sfw.LogCFID')) {
-		local.LogCFID = session.sfw.LogCFID
+	if (isDefined('session.fw.LogCFID')) {
+		local.LogCFID = session.fw.LogCFID
 	} else {
 		local.LogCFID = 0
 	}
@@ -50,7 +50,7 @@ remote function Save() {
 	local.svc.addParam(cfsqltype='cf_sql_varchar',value=local.LogUIClass)
 	local.svc.addParam(cfsqltype='cf_sql_varchar',value=arguments.LogUIDestination)
 	local.svc.addParam(cfsqltype='cf_sql_varchar',value=arguments.LogUIValue)
-	local.lfw.log.db = false
+	local.fw.log.db = false
 	include '/Inc/execute.cfm'
 	// Don't forget to put local.dataType = 'text' in the JavaScript!
 }

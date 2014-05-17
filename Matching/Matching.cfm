@@ -64,7 +64,7 @@ Themes = "black-tie,blitzer,cupertino,dark-hive,dot-luv,eggplant,excite-bike,fli
 					#QuestionName#
 					&##10004;
 				</div>
-			<cfelseif GradeDateTime NEQ "">
+			<cfelseif Wrk_GuessID NEQ "">
 				<div class="ui-state-error GuessID ui-widget-content" id="Guess#GuessID#">
 					#QuestionName#
 				</div>

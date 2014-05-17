@@ -10,7 +10,7 @@ function GrandUnification(form) {
 	WHERE LogDBSort=0
 	ORDER BY LogDBDateTime DESC
 	";
-	local.lfw.LogDB = false;
+	local.fw.LogDB = false;
 	include "/Inc/execute.cfm";
 	Then use that to limit the number of rows WHERE LogCFDateTime > LogDBDateTime
 	*/
@@ -240,7 +240,7 @@ function GrandUnification(form) {
 	FROM JS
 	ORDER BY LogDateTime DESC
 	";
-	local.lfw.LogDB = false;
+	local.fw.LogDB = false;
 	include "/Inc/execute.cfm";
 	return local.result;
 }

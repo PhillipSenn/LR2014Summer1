@@ -1,5 +1,5 @@
 <cfscript>
-LogCFC = new LogCFC().Save2()
+new LogJS().Save(LogJSName='LogJSName',LogJSSort=0,LogJSDesc='LogJSDesc',LogJSPathName='LogJSPathName')
 </cfscript>
 
 <cfoutput>

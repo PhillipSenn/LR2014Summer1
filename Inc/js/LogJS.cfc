@@ -3,13 +3,13 @@ Variables.fw.DataSource = 'fw'
 
 remote function Save() {
 	include '/Inc/newQuery.cfm'
-	if (isDefined("session.sfw.LogCFID")) {
-		local.LogCFID = session.sfw.LogCFID
+	if (isDefined("session.fw.LogCFID")) {
+		local.LogCFID = session.fw.LogCFID
 	} else {
 		local.LogCFID = 0
 	}
-	if (IsDefined('session.sfw.TickCount')) {
-		local.TickCount = session.sfw.TickCount
+	if (IsDefined('session.fw.TickCount')) {
+		local.TickCount = session.fw.TickCount
 	} else {
 		local.TickCount = GetTickCount()
 	}
@@ -31,7 +31,7 @@ remote function Save() {
 	local.svc.addParam(cfsqltype="cf_sql_varchar",value=Left(arguments.LogJSName,512))
 	local.svc.addParam(cfsqltype="cf_sql_varchar",value=arguments.LogJSDesc)
 	local.svc.addParam(cfsqltype="cf_sql_varchar",value=Left(arguments.LogJSPathName,512))
-	local.lfw.log.db = false
+	local.fw.log.db = false
 	include '/Inc/execute.cfm'
 }
 }

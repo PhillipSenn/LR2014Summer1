@@ -5,7 +5,7 @@
 <cfoutput>
 <cfinclude template="/Inc/html.cfm">
 <cfinclude template="/Inc/body.cfm">
-#request.rfw.Detail#
+#request.fw.Detail#
 <cfinclude template="/Inc/foot.cfm">
 <cfinclude template="/Inc/End.cfm">
 </cfoutput>

@@ -1,6 +1,6 @@
 component extends="ReadWhereDelete" {
-Variables.TableName = "Assignment";
-Variables.TableSort = "CourseSort,AssignmentStart,AssignmentStop,AssignmentID";
+Variables.fw.TableName = "Assignment";
+Variables.fw.TableSort = "CourseSort,AssignmentStart,AssignmentStop,AssignmentID";
 
 function WhereActSort(arg) {
 	include "/Inc/newQuery.cfm";

@@ -10,7 +10,7 @@ if (IsDefined("Variables.showProgress") && Variables.showProgress) {
 		}
 	}
 }
-// request.rfw.msg = 'test'
+// request.fw.msg = 'test'
 </cfscript>
 
 </head>
@@ -30,15 +30,15 @@ if (IsDefined("Variables.showProgress") && Variables.showProgress) {
 				</div>
 				<div class="collapse navbar-collapse" id="collapse">
 					<ul class="nav navbar-nav">
-						<li><a href="Progress/Progress.cfm">Progress</a></li>
+						<li><a href="/Student/Progress.cfm">Progress</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li class="active dropdown">
 						<a href="##" class="dropdown-toggle" data-toggle="dropdown">Profile <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="#Application.afw.Path#Person/Person.cfm">Edit my profile</a></li>
+							<li><a href="#Application.fw.Path#Person/Person.cfm">Edit my profile</a></li>
 							<li class="divider"></li>
-							<li><a href="/TPT/Login/Logout.cfm?Logout">Logout</a></li>
+							<li><a href="#Application.fw.Path#?Logout">Logout</a></li>
 						</ul>
 						</li>
 					</ul>
@@ -56,9 +56,9 @@ if (IsDefined("Variables.showProgress") && Variables.showProgress) {
 			</div>
 		</div>
 	</div>
-	<cfif request.rfw.msg NEQ ''>
-		<div class="msg container #request.rfw.modifier#">
-			#request.rfw.msg#
+	<cfif request.fw.msg NEQ ''>
+		<div class="msg container #request.fw.modifier#">
+			#request.fw.msg#
 		</div>
 	<cfelseif IsDefined("Variables.showProgress") AND Variables.showProgress>
 		<div class="msg container #progress#">
@@ -69,5 +69,5 @@ if (IsDefined("Variables.showProgress") && Variables.showProgress) {
 		</div>
 	</cfif>
 </nav>
-<section id="main" class="<cfif Variables.fw.Container>container<cfelse>noContainer</cfif>"<cfif request.rfw.hidden && request.rfw.css && request.rfw.js> hidden</cfif>>
+<section id="main" class="<cfif Variables.fw.Container>container<cfelse>noContainer</cfif>"<cfif request.fw.hidden && request.fw.css && request.fw.js> hidden</cfif>>
 </cfoutput>

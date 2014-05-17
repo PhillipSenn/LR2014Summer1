@@ -4,7 +4,7 @@ Variables.fw.TableSort = 'LogDBErrDateTime DESC, LogDBErrID DESC'
 Variables.fw.DataSource = 'fw'
 
 function Save(arg) { // arg was the local scope when passed.  So arg.result was local.result.
-	request.rfw.log.Sort += 1
+	request.fw.log.Sort += 1
 
 	local.result.Prefix = {}
 	if (StructKeyExists(arg.result.Exception,"sql")) {
@@ -12,7 +12,7 @@ function Save(arg) { // arg was the local scope when passed.  So arg.result was 
 	}
 	local.result.Prefix.RecordCount = 0
 	local.result.Prefix.ExecutionTime = 0
-	local.lfw = Duplicate(arg.lfw)
+	local.fw = Duplicate(arg.fw)
 	local.LogDBID = new com.LogDB().Save(local)
 
 	// ErrorCode and SQLState are Integers
@@ -56,11 +56,11 @@ function Save(arg) { // arg was the local scope when passed.  So arg.result was 
 //		local.LogDBErrWhere = "arg.result.Exception.where"
 //	}
 	local.sql = "
-	DECLARE @DomainID Int = #Val(Application.afw.DomainID)#
+	DECLARE @DomainID Int = #Val(Application.fw.DomainID)#
 	DECLARE @LogDBErrID BigInt = NEXT VALUE FOR LogDBErrID
 	DECLARE @LogDBID BigInt = #Val(local.LogDBID)#
-	DECLARE @LogDBErrSort Int = #Val(request.rfw.log.Sort)#
-	DECLARE @LogDBErrElapsed Int = #GetTickCount() - request.rfw.TickCount#
+	DECLARE @LogDBErrSort Int = #Val(request.fw.log.Sort)#
+	DECLARE @LogDBErrElapsed Int = #GetTickCount() - request.fw.TickCount#
 	DECLARE @LogDBErrCode Int = #Val(local.LogDBErrCode)#
 	DECLARE @LogDBErrSQLState Int = #Val(local.LogDBErrSQLState)#
 	UPDATE LogDBErr SET
@@ -80,10 +80,10 @@ function Save(arg) { // arg was the local scope when passed.  So arg.result was 
 	local.svc.addParam(cfsqltype="cf_sql_varchar",value=local.LogDBErrType)
 	local.svc.addParam(cfsqltype="cf_sql_varchar",value=local.LogDBErrName)
 	local.svc.addParam(cfsqltype="cf_sql_varchar",value=local.LogDBErrDesc)
-	local.lfw.log.db = false
+	local.fw.log.db = false
 	include '/Inc/execute.cfm'
 
-	if (arg.lfw.try.abort) {
+	if (arg.fw.try.abort) {
 		WriteOutput('<html>' & Chr(10))
 		WriteOutput('<head>' & Chr(10))
 		WriteOutput('<link rel="stylesheet" href="/Inc/css/fw.css">' & Chr(10))
@@ -101,9 +101,9 @@ function Save(arg) { // arg was the local scope when passed.  So arg.result was 
 		WriteOutput('	</div>' & Chr(10))
 		WriteOutput('</nav>' & Chr(10))
 		WriteOutput('<section id="main" class="container">' & Chr(10))
-		if (arg.lfw.try.email != '') {
+		if (arg.fw.try.email != '') {
 			local.svc = new mail()
-			local.svc.setSubject(Application.afw.Name & ': ' & ListLast(GetBaseTemplatePath(),'\'))
+			local.svc.setSubject(Application.fw.Name & ': ' & ListLast(GetBaseTemplatePath(),'\'))
 			local.emailBody  = ''
 			if (StructKeyExists(arg.result.Exception,"Datasource")) {
 				local.emailBody &= 'Datasource: ' & arg.result.Exception.datasource & '<br>'
@@ -136,7 +136,7 @@ function Save(arg) { // arg was the local scope when passed.  So arg.result was 
 			}
 			*/
 			local.emailBody &= '<p>'
-			local.emailBody &= 'Application: ' & Application.afw.Name & '<br>'
+			local.emailBody &= 'Application: ' & Application.fw.Name & '<br>'
 			local.emailBody &= 'SCRIPT_NAME: ' & cgi.SCRIPT_NAME & '<br>'
 			local.emailBody &= 'CurrentTmpl: ' & GetCurrentTemplatePath() & '<br>'
 			local.emailBody &= '</p>'
@@ -163,8 +163,8 @@ function Save(arg) { // arg was the local scope when passed.  So arg.result was 
 			local.svc.setTo('Administrator<#UserName#>')
 			local.svc.setUserName(UserName)
 			local.svc.setPassword(Password)
-			local.svc.Send()
-			WriteOutput("<p>I've sent an email to the administrator to let them know.</p>" & Chr(10))
+			// local.svc.Send()
+			WriteOutput("<p>I've sent an email to professor Senn to let him know.</p>" & Chr(10))
 		}
 		WriteOutput('</div>' & Chr(10))
 		WriteOutput('<script src="//code.jquery.com/jquery-2.1.1.js"></script>' & Chr(10))
@@ -174,8 +174,8 @@ function Save(arg) { // arg was the local scope when passed.  So arg.result was 
 		WriteOutput('</html>')
 		abort;
 	} else {
-		request.rfw.msg = arg.result.Exception.Detail
-		request.rfw.modifier = arg.fw.try.class
+		request.fw.msg = arg.result.Exception.Detail
+		request.fw.modifier = arg.fw.try.class
 	}
 }
 }

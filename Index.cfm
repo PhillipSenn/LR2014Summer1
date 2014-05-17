@@ -10,8 +10,10 @@
 	<li><a href="Log/DBErr/DBErr.cfm">LogDBErr</a></li>
 	<li><a href="Log/CF/LogCF.cfm">LogCF</a></li>
 	<li><a href="Log/CFErr/CFErr.cfm">LogCFErr</a></li>
-	<li><a href="Log/JS/LogJS.cfm">LogJS</a></li>
+	<li><a href="Log/JS/JS.cfm">LogJS</a></li>
 	<li><a href="Log/UI/UI.cfm">LogUI</a></li>
+	<li><a href="Log/Log.cfm">Grand Unification of all logs</a></li>
+	<li><a href="Reset.cfm">Reset Everything</a></li>
 </ul>
 <cfinclude template="/Inc/foot.cfm">
 <cfinclude template="/Inc/End.cfm">

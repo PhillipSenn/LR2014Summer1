@@ -1,5 +1,5 @@
 <cfscript>
-param name="Variables.fw.Name" default=Application.afw.Name;
+param name="Variables.fw.Name" default=Application.fw.Name;
 </cfscript>
 
 <cfoutput>
@@ -11,7 +11,7 @@ param name="Variables.fw.Name" default=Application.afw.Name;
 <meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control">
 <meta content="no-cache"                            http-equiv="Pragma">
 <meta content="0"                                   http-equiv="Expires">
-<cfif request.rfw.css>
+<cfif request.fw.css>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<cfif IsDefined('Variables.fw.jQueryUI')>
@@ -19,9 +19,9 @@ param name="Variables.fw.Name" default=Application.afw.Name;
 		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1/themes/#Variables.fw.jQueryUI#/jquery-ui.css">
 	</cfif>
 	<link rel="stylesheet" href="/Inc/css/fw.css">
-	<link rel="stylesheet" href="#Application.afw.Path#Inc/css/html.css">
+	<link rel="stylesheet" href="#Application.fw.Path#Inc/css/html.css">
 </cfif>
-<cfif request.rfw.js>
+<cfif request.fw.js>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.1/modernizr.js"></script>
 </cfif>
 <title>#Variables.fw.Name#</title>

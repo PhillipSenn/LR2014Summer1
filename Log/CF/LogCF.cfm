@@ -5,7 +5,6 @@ if (StructKeyExists(url,"LogCFID")) {
 	LogCF = new com.LogCF().Where()
 }
 SaveDate = ""
-US = getPageContext().getRequest().getRemoteAddr()
 Variables.fw.container = false
 </cfscript>
 
@@ -35,7 +34,9 @@ Variables.fw.container = false
 		<cfloop query="LogCF.qry">
 			<tr>
 				<td class="num">#LogCFID#</td>
-				<td class="num">#LogCF_UsrID#</td>
+				<td class="num">
+					<a href="../Usr/Usr.cfm?UsrID=#LogCF_UsrID#">#LogCF_UsrID#</a>
+				</td>
 				<td class="num">
 					<cfif LogCFSort>
 						#LogCFSort#
@@ -82,11 +83,11 @@ Variables.fw.container = false
 					</cfif>
 				</td>
 				<td class="num monospace">#TimeFormat(LogCFDateTime,"H:mm:ss.lll")#</td>
-				<cfif RemoteAddr EQ US>
-					<td title="#us#">
+				<cfif RemoteAddr EQ session.fw.RemoteAddr>
+					<td title="#RemoteAddr#">
 						us
 					</td>
-				<cfelseif RemoteAddr EQ "216.198.198.150">
+				<cfelseif RemoteAddr EQ Application.fw.RemoteAddr>
 					<td title="#RemoteAddr#">VPS</td>
 				<cfelse>
 					<td>#RemoteAddr#</td>

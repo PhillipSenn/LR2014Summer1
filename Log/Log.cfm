@@ -1,18 +1,30 @@
 <cfscript>
-Log = new Log().GrandUnification()
+form.DomainID=1
+Log = new Log().Where(form)
 SaveDate = ''
-US = getPageContext().getRequest().getRemoteAddr()
 Variables.fw.container = false
+Domain = new com.Domain().Where()
 </cfscript>
 
 <cfoutput>
 <cfinclude template="/Inc/html.cfm">
 <cfinclude template="/Inc/body.cfm">
+<!---
+When I start keeping track of multiple domains, then I'll use this:
+<form method="post">
+	<label for="DomainID">Domain:</label>
+	<select name="DomainID">
+		<cfloop query="Domain.qry">
+			<option value="#DomainID#">#DomainName#</option>
+		</cfloop>
+	</select>
+</form>
+--->
 <table>
 	<thead>
 		<tr>
-			<th>Type</th>
 			<th class="num">Primary<br>Key</th>
+			<th>Type</th>
 			<th class="num">Date/Time</th>
 			<th class="num">User</th>
 			<th class="num">CF</th>
@@ -29,28 +41,28 @@ Variables.fw.container = false
 	<tbody>
 		<cfloop query="Log.qry">
 			<tr>
+				<td class="num" title="Log#Type#">#PrimaryKey#</td>
 				<td>#Type#</td>
-				<td class="num">#PrimaryKey#</td>
 				<td class="num monospace">
 					<cfif SaveDate NEQ DateFormat(LogDateTime,"mm/dd/yyyy")>
 						<cfset SaveDate = DateFormat(LogDateTime,"mm/dd/yyyy")>
 						#SaveDate# <br>
 					</cfif>
-					#TimeFormat(LogDateTime,"H:mm:ss.lll")#
+					#TimeFormat(LogDateTime,"h:mm:ss.llltt")#
 				</td>
 				<td class="num">
-					<cfif PersonID>
-						<a href="../Person/Person.cfm?PersonID=#PersonID#">#PersonID#</a>
+					<cfif UsrID>
+						<a href="Usr/Usr.cfm?UsrID=#UsrID#">#UsrID#</a>
 					</cfif>
 				</td>
 				<td class="num">
-					<cfif LogCFID>
-						<a href="LogCF.cfm?LogCFID=#LogCFID#">#LogCFID#</a>
+					<cfif LogCFID AND LogDateTime NEQ "">
+						<a href="CF/LogCF.cfm?LogCFID=#LogCFID#">#LogCFID#</a>
 					</cfif>
 				</td>
 				<td class="num">
-					<cfif LogDBID>
-						<a href="../LogDB/LogDB.cfm?LogDBID=#LogDBID#">#LogDBID#</a>
+					<cfif LogDBID AND LogDateTime NEQ "">
+						<a href="DB/LogDB.cfm?LogDBID=#LogDBID#">#LogDBID#</a>
 					</cfif>
 				</td>
 				<td class="num">
@@ -66,16 +78,18 @@ Variables.fw.container = false
 				<td class="num">
 					#Elapsed#
 				</td>
-				<td>
-					<cfset Variables.LogName = Replace(LogName,'814F7845-1C3F-4F42-BD1C-4A3301AF89BF','(snip)','all')>
-					#Variables.LogName#
-				</td>
+				<cfif FindNoCase('UniqueID',LogName)>
+					<cfset Variables.LogName = 'UniqueID=?'>
+				<cfelse>
+					<cfset Variables.LogName = LogName>
+				</cfif>
+				<td>#Variables.LogName#</td>
 				<td>#Description#</td>
 				<td>
 					<cfset Break = ''>
 					<cfif Varchar1 NEQ "">
 						<cfif Type EQ "CF">
-							<a href="LogCFOutString.cfm?LogCFID=#PrimaryKey#">Output:&nbsp;#Len(Varchar1)#</a>
+							<a href="CF/OutString.cfm?LogCFID=#PrimaryKey#">Output:&nbsp;#Len(Varchar1)#</a>
 							<cfset Break = '<br>'>
 						<cfelseif Type EQ "UI">
 							#Varchar1#
@@ -84,28 +98,28 @@ Variables.fw.container = false
 					</cfif>
 					<cfif Varchar2 NEQ "">
 						<cfif Type EQ "CF">
-							#Break#<a href="LogCFUserAgent.cfm?LogCFID=#PrimaryKey#">UserAgent:&nbsp;#Len(Varchar2)#</a>
+							#Break#<a href="CF/UserAgent.cfm?LogCFID=#PrimaryKey#">UserAgent:&nbsp;#Len(Varchar2)#</a>
 							<cfset Break = '<br>'>
 						<cfelseif Type EQ "UI">
-							#Break#<a href="LogUIDestination.cfm?LogUIID=#PrimaryKey#">#Varchar2#</a>
+							#Break#<a href="UI/LogUIDestination.cfm?LogUIID=#PrimaryKey#">#Varchar2#</a>
 							<cfset Break = '<br>'>
 						</cfif>
 					</cfif>
 					<cfif Varchar4 NEQ "">
 						<cfif Type EQ "CF">
-							#Break#<a href="LogCFURL.cfm?LogCFID=#PrimaryKey#">URL:&nbsp;#Len(Varchar4)#</a>
+							#Break#<a href="CF/LogCFURL.cfm?LogCFID=#PrimaryKey#">URL:&nbsp;#Len(Varchar4)#</a>
 							<cfset Break = '<br>'>
 						</cfif>
 					</cfif>
 					<cfif Varchar5 NEQ "">
 						<cfif Type EQ "CF">
-							#Break#<a href="LogCFForm.cfm?LogCFID=#PrimaryKey#">Form:&nbsp;#Len(Varchar5)#</a>
+							#Break#<a href="CF/Form.cfm?LogCFID=#PrimaryKey#">Form:&nbsp;#Len(Varchar5)#</a>
 							<cfset Break = '<br>'>
 						</cfif>
 					</cfif>
 					<cfif Varchar6 NEQ "">
 						<cfif Type EQ "CF">
-							#Break#<a href="LogCFSession.cfm?LogCFID=#PrimaryKey#">Session:&nbsp;#Len(Varchar6)#</a>
+							#Break#<a href="CF/Session.cfm?LogCFID=#PrimaryKey#">Session:&nbsp;#Len(Varchar6)#</a>
 							<cfset Break = '<br>'>
 						</cfif>
 					</cfif>
@@ -154,10 +168,10 @@ Variables.fw.container = false
 					<td title="#RemoteAddr#">
 						Atlas
 					</td>
-				<cfelseif RemoteAddr EQ "204.12.49.139">
+				<cfelseif RemoteAddr EQ Application.fw.RemoteAddr>
 					<td title="#RemoteAddr#">VPS</td>
-				<cfelseif RemoteAddr EQ US>
-					<td title="#us#">
+				<cfelseif RemoteAddr EQ session.fw.RemoteAddr>
+					<td title="#RemoteAddr#">
 						us
 					</td>
 				<cfelse>
@@ -167,7 +181,6 @@ Variables.fw.container = false
 		</cfloop>
 	</tbody>
 </table>
-
 <cfinclude template="/Inc/foot.cfm">
 <cfinclude template="/Inc/End.cfm">
 </cfoutput>

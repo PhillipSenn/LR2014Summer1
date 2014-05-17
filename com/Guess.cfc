@@ -1,6 +1,6 @@
-component extends="Library.com.ReadWhereDelete" {
-Variables.TableName = "Guess";
-Variables.TableSort = "GuessID DESC";
+component extends="ReadWhereDelete" {
+Variables.fw.TableName = "Guess";
+Variables.fw.TableSort = "GuessID DESC";
 
 function Score(arg) { // /Inc/Paper.cfm
 	include "/Inc/newQuery.cfm";
@@ -47,17 +47,8 @@ function Score(arg) { // /Inc/Paper.cfm
 	return local.result;
 }
 
-function Create(arg) {
+function Create(arg) { // where correct=1
 	include "/Inc/newQuery.cfm";
-	/*
-	Remember, this says:
-	
-	WHERE Correct=1
-	So it's creating the top n number of answers where correct=1
-
-
-
-	*/
 	local.sql = "
 	DECLARE @PaperID Int = #Val(arg.PaperID)#;
 	SELECT COUNT(*) AS CreatedQuestions
@@ -78,10 +69,11 @@ function Create(arg) {
 		local.sql = "
 		DECLARE @PaperID Int = #Val(arg.PaperID)#;
 		DECLARE @ActID Int = #Val(arg.ActID)#;
-		INSERT INTO Guess(Guess_PaperID,Guess_AnswerID)
+		INSERT INTO Guess(Guess_PaperID,Guess_AnswerID,GradeDateTime)
 		SELECT TOP #arg.Questions-Val(local.Guess.qry.CreatedQuestions)#
 		@PaperID
 		,AnswerID
+		,getdate()
 		FROM AnswerView
 		WHERE ActID = @ActID
 		AND Correct=1

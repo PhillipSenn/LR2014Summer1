@@ -19,6 +19,7 @@ Variables.fw.container = false
 			<th class="num">Sort</th>
 			<th class="num">Elapsed</th>
 			<th>Function</th>
+			<th>LogDBName</th>
 			<th class="num">Record<br>Count</th>
 			<th class="num">Exec<br>Time</th>
 			<th class="num">Date/Time</th>
@@ -48,6 +49,16 @@ Variables.fw.container = false
 					</cfif>
 					#LogDBFunctionName#
 				</td>
+				<cfset myClass = ''>
+				<cfif LogDBFunctionName EQ "WhereUniqueID()">
+					<cfset Variables.LogDBName = "SELECT * FROM UsrView WHERE UniqueID=?">
+				<cfelseif FindNoCase('UniqueID',LogDBName)>
+					<cfset Variables.LogDBName = "UniqueID found in cmd">
+					<cfset myClass = 'label-danger'>
+				<cfelse>
+					<cfset Variables.LogDBName = LogDBName>
+				</cfif>
+				<td class="pre #myClass#">#Variables.LogDBName#</td>
 				<td class="num">
 					<cfif LogDBRecordCount>
 						#LogDBRecordCount#
@@ -63,29 +74,17 @@ Variables.fw.container = false
 						<cfset SaveDate = DateFormat(LogDBDateTime,"mm/dd/yyyy")>
 						#SaveDate# <br>
 					</cfif>
-					#TimeFormat(LogDBDateTime,"h:mm:ss.llltt")#
+					#TimeFormat(LogDBDateTime,"h:mm:ss:llltt")#
 				</td>
 				<cfif RemoteAddr EQ session.fw.RemoteAddr>
 					<td title="#RemoteAddr#">
 						us
 					</td>
-				<cfelseif RemoteAddr EQ Application.fw.RemoteAddr>
+				<cfelseif RemoteAddr EQ "216.198.198.150">
 					<td title="#RemoteAddr#">VPS</td>
 				<cfelse>
 					<td>#RemoteAddr#</td>
 				</cfif>
-			</tr>
-			<tr>
-				<cfset myClass = ''>
-				<cfif LogDBFunctionName EQ "WhereUniqueID()">
-					<cfset Variables.LogDBName = "SELECT * FROM UsrView WHERE UniqueID=?">
-				<cfelseif FindNoCase('UniqueID',LogDBName)>
-					<cfset Variables.LogDBName = "UniqueID found in cmd">
-					<cfset myClass = 'label-danger'>
-				<cfelse>
-					<cfset Variables.LogDBName = LogDBName>
-				</cfif>
-				<td colspan="9" class="#myClass#"><pre>#Variables.LogDBName#</pre></td>
 			</tr>
 		</cfloop>
 	</tbody>

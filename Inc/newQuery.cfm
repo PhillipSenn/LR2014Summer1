@@ -2,9 +2,9 @@
 local.result = {}
 local.result.msg = ''
 local.svc = new query()
-local.lfw = Duplicate(request.rfw)
+local.fw = Duplicate(request.fw)
 if (IsDefined('Variables.fw.DataSource')) {
-	local.lfw.DataSource = Variables.fw.DataSource
+	local.fw.DataSource = Variables.fw.DataSource
 }
-local.lfw.FunctionCalledName = GetFunctionCalledName() & '()'
+local.fw.FunctionCalledName = GetFunctionCalledName() & '()'
 </cfscript>

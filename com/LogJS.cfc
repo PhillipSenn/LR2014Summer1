@@ -21,7 +21,7 @@ remote function Save() {
 	DECLARE @LogJSSort Int = #Val(arguments.LogJSSort)#
 	DECLARE @LogJSElapsed Int = #GetTickCount() - local.TickCount#
 	UPDATE LogJS SET
-	 LogJS_LogCFID = @LogCFID
+	 LogJS_CFID = @LogCFID
 	,LogJSSort = @LogJSSort
 	,LogJSElapsed = @LogJSElapsed
 	,LogJSDateTime = getdate()

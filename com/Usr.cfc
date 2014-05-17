@@ -1,4 +1,7 @@
-component {
+component extends="ReadWhereDelete" {
+Variables.fw.TableName = 'Usr'
+Variables.fw.TableSort = 'UsrID'
+
 function WhereUniqueID(arg) {
 	if (Len(arg.UniqueID) != 36) return;
 	if (Mid(arg.UniqueID,9,1) != '-') return;
