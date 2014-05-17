@@ -1,0 +1,17 @@
+body {
+	padding-top:100px;
+}
+.AnswerID {
+	cursor:move;
+}
+.AnswerID {
+	z-index:1;
+}
+.ui-widget-content {
+	margin-bottom:.5em;
+	padding-left:.5em;
+}
+.theme {
+	text-align:right;
+}
+

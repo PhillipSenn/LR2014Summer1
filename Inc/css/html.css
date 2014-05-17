@@ -1,0 +1,47 @@
+@import url('http://cdn.phillipsenn.com/bootstrap-3.1.1-dist/css/bootstrap-theme.css');
+label {
+	font-weight:normal
+}
+.textAlign-center {
+	text-align:center
+}
+a {
+	text-decoration:none
+}
+a:hover {
+	text-decoration:underline
+}
+a.btn:hover {
+	text-decoration:underline
+}
+.msg {
+	height:28px
+}
+td.monospace {
+	font-family:"Courier New", Courier, monospace
+}
+td.pre { /* http://stackoverflow.com/questions/219219/how-to-change-a-span-to-look-like-a-pre-with-css */
+	display: block;
+	unicode-bidi: embed;
+	font-family: monospace;
+	white-space: pre-wrap;
+	font-size:16px
+}
+.progress {
+	margin-bottom:0px
+}
+.container {
+	padding-left:0px; /* 5/15/2014 I did this for the progress bar. */
+	padding-right:0px
+}
+
+.navbar-nav.navbar-right:last-child {
+	margin-right:0px /* 5/15/2014 was -15px */
+}
+td.time { /* 5/16/2014 */
+	text-align:right;
+	font-family:"Courier New", Courier, monospace
+}
+th.time { /* 5/16/2014 */
+	text-align:right;
+}
